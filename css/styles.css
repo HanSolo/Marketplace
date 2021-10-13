@@ -1,5 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;900&family=Poppins:wght@200;300;400;700&display=swap');
+
 body {
-  font-family     : Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+  font-family: 'Poppins', serif;
+  font-weight: 300;
+  font-style: normal;
+  line-height: initial;
   background-color: #14003c;
   color           : #14003c;
   margin          : 0px;
@@ -16,9 +21,9 @@ body {
   text-align      : center;
   padding         : 20px;
 }
+
 #banner-label {
   color: white;
-  
 }
 
 #main {
@@ -54,8 +59,13 @@ html {
 	font-weight: 300
 }
 
-button, h1, h2, h3, h4, input, optgroup, select, textarea {
+button, input, optgroup, select, textarea {
 	font-family: sans-serif;
+	font-weight: 400
+}
+
+h1, h2, h3, h4 {
+	font-family: 'Nunito', serif;
 	font-weight: 400
 }
 
