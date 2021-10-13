@@ -1420,6 +1420,15 @@ div#latest-selector {
 	font-weight: 400;
 }
 
+.main-download__variant__distribution span {
+	color: #777;
+	display: block;
+	text-align: center;
+	font-weight: 600;
+}
+
+
+
 .main-download__variant__archive-type span {
   color: #777;
 	display: block;
@@ -1499,6 +1508,11 @@ div#latest-selector {
 	border-right: 1px solid #f0f0f0
 }
 
+.main-download__variant__distribution {
+	border-right: 1px solid #f0f0f0
+}
+
+
 .main-download__variant__vendor {
 	border-right: 1px solid #f0f0f0
 }
@@ -1554,7 +1568,7 @@ div#latest-selector {
 }
 
 .filter {
-	width: 8em;
+	width: 7em;
 	height: 2em;
 	-webkit-appearance: button;
 	-webkit-border-radius: 2px;
@@ -1586,19 +1600,11 @@ div#latest-selector {
 	}
 }
 
-.filter-os {
-  float: left;
-}
-
-.filter-arch {
-  float: left;
-}
-
-.filter-package-type {
-  float: left;
-}
-
-.filter-version {
+.filter-os,
+.filter-arch,
+.filter-package-type,
+.filter-archive-type,
+.filter-version  {
   float: left;
 }
 

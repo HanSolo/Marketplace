@@ -97,6 +97,11 @@
         <select id="package-type-filter" class="filter" onchange="filter()"><option value="any">Any</option><option value="jdk">JDK</option><option value="jre">JRE</option></select>
       </div>
       
+      <div class="filter-archive-type filter-div">
+        <span><strong>Archive Type:</strong></span>
+        <select id="archive-type-filter" class="filter" onchange="filter()"><option value="any">Any</option><option value="tar.gz">tar.gz</option><option value="deb">deb</option><option value="rpm">rpm</option><option value="zip">zip</option><option value="msi">msi</option><option value="pkg">pkg</option><option value="dmg">dmg</option></select>
+      </div>
+      
       <div class="filter-version filter-div">
         <span><strong>Version:</strong></span>
         <select id="version-filter" class="filter" onchange="filter()"><option value="any">Any</option><option value="8">8</option><option value="11">11</option><option value="16">16</option><option value="17">17</option></select>
@@ -106,7 +111,7 @@
     <table id="download-table" class="main-download__variant__table releases-table">
        <thead>
          <tr class="table-head">
-          <td class="table-head">Build Version</td><td class="table-head">Vendor</td><td class="table-head">Operating System</td><td class="table-head">Architecture</td><td class="table-head">Download</td>
+          <td class="table-head">Build Version</td><td class="table-head">Distribution</td><td class="table-head">Vendor</td><td class="table-head">Operating System</td><td class="table-head">Architecture</td><td class="table-head">Download</td>
          </tr>
        </thead>
        <tbody>
@@ -191,6 +196,7 @@
       let selectedOperatingSystem = document.getElementById('os-filter').value;
       let selectedArchitecture    = document.getElementById('arch-filter').value;
       let selectedPackageType     = document.getElementById('package-type-filter').value;
+      let selectedArchiveType     = document.getElementById('archive-type-filter').value;
       let selectedVersion         = document.getElementById('version-filter').value;
 
       let libc;
@@ -227,6 +233,13 @@
           pt = pkg.package_type == selectedPackageType;
         }
         
+        let at;
+        if (selectedArchiveType === 'any') {
+          at = true;
+        } else {
+          at = pkg.archive_type == selectedArchiveType;
+        }
+        
         let ver;
         if (selectedVersion === 'any') {
           ver = true;
@@ -234,7 +247,7 @@
           ver = pkg.major_version == selectedVersion;
         }
         
-        return os && lc && arc && pt && ver;               
+        return os && lc && arc && pt && at && ver;               
       });
             
       updateDownloads();
@@ -254,17 +267,26 @@
         // Version and Distribution
         var cellName       = row.insertCell();
         cellName.className = 'main-download__variant__name blue-bg';
-        var versionText = document.createTextNode((pkg.package_type == 'jdk' ? 'JDK ' : 'JRE ') + normalizeJavaVersion(pkg.java_version));
+        var versionText = document.createTextNode(normalizeJavaVersion(pkg.java_version));
         var spanVersion = document.createElement('span');
         spanVersion.appendChild(versionText);
+        var packageTypeText = document.createTextNode(pkg.package_type == 'jdk' ? 'JDK' : 'JRE');
+        var spanPackageType = document.createElement('span');
+        spanPackageType.className='download-last-version';
+        spanPackageType.appendChild(packageTypeText);
+        cellName.appendChild(spanVersion);
+        cellName.appendChild(spanPackageType);
+        
+        
+        // Distribution
+        var cellDistribution       = row.insertCell();
+        cellDistribution.className = 'main-download__variant__distribution';
         var distributionText = document.createTextNode(capitalize(pkg.distribution));
         var spanDistribution = document.createElement('span');
-        spanDistribution.className='download-last-version';
         spanDistribution.appendChild(distributionText);
-        cellName.appendChild(spanVersion);
-        cellName.appendChild(spanDistribution);
-        
-        
+        cellDistribution.appendChild(spanDistribution);
+
+                
         // Vendor
         var cellVendor       = row.insertCell();
         cellVendor.className = 'main-download__variant__vendor';
