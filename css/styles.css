@@ -54,6 +54,29 @@ div.scroll {
   
 }
 
+
+.nav-item {
+  background : transparent;
+  padding    : 5px;
+  margin     : 5px;
+  color      : white;
+  font-family: 'Poppins', serif;
+  font-size  : 24px;
+  text-align : center;
+  float      : left;
+}
+.nav-separator{
+  background : transparent;
+  padding    : 5px;
+  margin     : 2px;
+  color      : white;
+  font-family: 'Poppins', serif;
+  font-size  : 24px;
+  text-align : center;
+  float      : left;
+}
+
+
 html {
 	font: 16px sans-serif;
 	font-weight: 300
