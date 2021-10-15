@@ -383,7 +383,10 @@
           promise.then(function(uri) {
             let pkgUri = uri;
             if (pkgUri == null || pkgUri === undefined) { return; }
-            window.open(pkgUri);
+            var link      = document.createElement('a');
+            link.href     = pkgUri;
+            link.download = pkgUri.substr(pkgUri.lastIndexOf('/') + 1);
+            link.click();
           }, function() { 
             console.log("Error: Problem getting download link");
             pkgUri = null;
