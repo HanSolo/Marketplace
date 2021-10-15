@@ -80,7 +80,19 @@
       </p>
     </div>
     </div>
-    
+
+    <ul>
+      <li><input type="checkbox" id="vendor-adoptium" checked onchange="filter()"/>
+        <label for="vendor-adoptium" title="Adoptium"><img src="./img/vendor_adoptium.png"/></label>
+      </li>
+      <li><input type="checkbox" id="vendor-microsoft" checked onchange="filter()"/>
+        <label for="vendor-microsoft" title="Microsoft"><img src="./img/vendor_microsoft.png"/></label>
+      </li>
+      <li><input type="checkbox" id="vendor-azul" checked onchange="filter()"/>
+        <label for="vendor-azul" title="Azul"><img src="./img/vendor_azul.png"/></label>
+      </li>      
+    </ul>
+
     <div class="filter-divs">
       <div class="filter-os filter-div">
         <span><strong>Operating System:</strong></span>
@@ -182,17 +194,49 @@
 
   <script>
     const baseUrl       = 'https://api.foojay.io';
+    const vendors       = [ 'Adoptium', 'Azul', 'Microsoft' ]
     const distributions = [ 'microsoft', 'temurin', 'zulu' ];
-    const versions      = [ 8, 11, 16, 17 ];
+    const versions      = [ 17, 16, 11, 8 ];
     let   pkgs          = [];
     let   selectedPkgs  = [];
+    
 
-    // Collect all available packages defined by distributions and versions and store them in pkgs
-    collectAllPkgs();
+    init();
+        
+    
+    
+    function init() {
+      // Collect all available packages defined by distributions and versions and store them in pkgs
+      collectAllPkgs();
+    
+      let operatingSystem = getOperatingSystem();
+      switch(operatingSystem) {
+        case 'Windows': 
+          document.getElementById('os-filter').value = 'windows'; 
+          document.getElementByid('archive-type-filter').value = 'msi';
+          break;
+        case 'Linux': 
+        case 'Unix' : 
+          document.getElementById('os-filter').value = 'linux'; 
+          document.getElementById('archive-type-filter').value = 'tar.gz';
+          break;
+        case 'MacOS': 
+          document.getElementById('os-filter').value = 'macos';
+          document.getElementById('archive-type-filter').value = 'tar.gz';
+          break;
+      }
+    
+      document.getElementById('arch-filter').value         = 'x64';
+      document.getElementById('package-type-filter').value = 'jdk';
+      document.getElementById('version-filter').value      = '17';
+    }
     
     
     // Filter pkgs array for current selection and store it in selectedPkgs  
     function filter() {
+      let microsoftSelected       = document.getElementById('vendor-microsoft').checked;
+      let temurinSelected         = document.getElementById('vendor-adoptium').checked;
+      let zuluSelected            = document.getElementById('vendor-azul').checked;
       let selectedOperatingSystem = document.getElementById('os-filter').value;
       let selectedArchitecture    = document.getElementById('arch-filter').value;
       let selectedPackageType     = document.getElementById('package-type-filter').value;
@@ -247,7 +291,11 @@
           ver = pkg.major_version == selectedVersion;
         }
         
-        return os && lc && arc && pt && at && ver;               
+        let temurin   = temurinSelected   ? pkg.distribution == 'temurin'   : false;
+        let microsoft = microsoftSelected ? pkg.distribution == 'microsoft' : false;
+        let zulu      = zuluSelected      ? pkg.distribution == 'zulu'      : false;
+        
+        return os && lc && arc && pt && at && ver && (temurin || microsoft || zulu);
       });
             
       updateDownloads();
@@ -281,7 +329,7 @@
         // Distribution
         var cellDistribution       = row.insertCell();
         cellDistribution.className = 'main-download__variant__distribution';
-        var distributionText = document.createTextNode(capitalize(pkg.distribution));
+        var distributionText = document.createTextNode(capitalize(pkg.distribution) + (pkg.javafx_bundled ? ' (FX)' : ''));
         var spanDistribution = document.createElement('span');
         spanDistribution.appendChild(distributionText);
         cellDistribution.appendChild(spanDistribution);
@@ -380,6 +428,14 @@
         case 'Azul'              : return './img/azul_logo.png';
         default                  : return '';
       }
+    }
+    
+    function getOperatingSystem() {
+      if (navigator.appVersion.indexOf("Win") != -1)   return "Windows";
+      if (navigator.appVersion.indexOf("Mac") != -1)   return "MacOS";
+      if (navigator.appVersion.indexOf("Linux") != -1) return "Linux";
+      if (navigator.appVersion.indexOf("X11") != -1)   return "Unix";
+      return "unknown";
     }
         
     
